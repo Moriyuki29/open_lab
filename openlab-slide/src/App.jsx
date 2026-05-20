@@ -2,6 +2,8 @@ import { useState } from "react"
 import HomePage from "./pages/HomePage"
 import CipherPage from "./pages/CipherPage"
 import GamePage from "./pages/GamePage"
+import GAPage from './pages/GAPage'
+
 function App() {
   const [page, setPage] = useState("home")
 
@@ -30,6 +32,10 @@ function App() {
         <button onClick={() => setPage("game")}>
           暗号ゲーム
         </button>
+
+        <button onClick={() => setPage("ga")}>
+          巡回セールスマン問題
+        </button>
       </div>
 
       {/* 右 */}
@@ -38,6 +44,7 @@ function App() {
         {page === "home" && <HomePage />}
         {page === "cipher" && <CipherPage />}
         {page === "game" && <GamePage />}
+        {page === "ga" && <GAPage />}
 
       </div>
     </div>
