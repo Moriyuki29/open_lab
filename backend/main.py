@@ -86,7 +86,9 @@ def crossover(p1: List[int], p2: List[int]) -> List[int]:
 
 # <=====================================ここに突然変異を書き足す．
 def mutate(route: List[int], rate: float) -> List[int]:
-    
+    if random.random() < rate:
+        idx1, idx2 = sorted(random.sample(range(len(route)), 2))
+        route[idx1:idx2+1] = reversed(route[idx1:idx2+1])
     return route
 
 @app.post("/api/ga")
