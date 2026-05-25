@@ -52,7 +52,36 @@ def generate_initial_population(size: int) -> List[List[int]]:
 
 # <=====================================ここに交叉を書き足す
 def crossover(p1: List[int], p2: List[int]) -> List[int]:
-    
+    while True:
+        crossover_point_1=random.randint(0,8)+1
+        crossover_point_2=random.randint(0,8)+1
+        # 交差点が同じ場合はやり直し　順序が逆の場合は入れ替える
+        if crossover_point_1>crossover_point_2:
+            crossover_point_1,crossover_point_2=crossover_point_2,crossover_point_1
+            break
+        elif crossover_point_1==crossover_point_2:
+            continue
+        else:
+            break
+    child = p1.copy()
+    for i in range(len(p1)):
+    #自身の値が交差点の中にあれば交換しない
+        if child[i] in p1[crossover_point_1:crossover_point_2]:
+            continue
+    #自身の値が交差点の中にない場合かつ交換先が交差点の中にない場合は交換する
+        elif p2[i] not in p1[crossover_point_1:crossover_point_2]:
+            child[i] = p2[i]
+    #自身の値が交差点の中にない場合かつ交換先が交差点の中にある場合は交換先を探す
+        else:
+            num=p2[i]
+            while True:
+                index=p1.index(num)
+                #先の交換候補の相方が交差点の中にある場合はさらに交換候補を探す
+                if p2[index] in p1[crossover_point_1:crossover_point_2]:
+                    num=p2[index]
+                else:
+                    child[i]=p2[index]
+                    break
     return child
 
 # <=====================================ここに突然変異を書き足す．
