@@ -53,8 +53,8 @@ def generate_initial_population(size: int) -> List[List[int]]:
 # <=====================================ここに交叉を書き足す
 def crossover(p1: List[int], p2: List[int]) -> List[int]:
     while True:
-        crossover_point_1=random.randint(0,8)+1
-        crossover_point_2=random.randint(0,8)+1
+        crossover_point_1=random.randint(0, len(p1) - 1)
+        crossover_point_2=random.randint(0, len(p1) - 1)
         # 交差点が同じ場合はやり直し　順序が逆の場合は入れ替える
         if crossover_point_1>crossover_point_2:
             crossover_point_1,crossover_point_2=crossover_point_2,crossover_point_1
