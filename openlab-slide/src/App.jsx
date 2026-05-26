@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage"
 import CipherPage from "./pages/CipherPage"
 import GamePage from "./pages/GamePage"
 import GAPage from './pages/GAPage'
-
+import SlidePage from "./pages/HIUSlidePage"
 function App() {
   const [page, setPage] = useState("home")
 
@@ -21,7 +21,7 @@ function App() {
       >
         <h2 style={{ color: "red" }}>Open Lab</h2>
 
-        <button onClick={() => setPage("home")}>
+        <button onClick={() => setPage("slide")}>
           大学紹介
         </button>
 
@@ -45,6 +45,7 @@ function App() {
         {page === "cipher" && <CipherPage />}
         {page === "game" && <GamePage />}
         {page === "ga" && <GAPage />}
+        {page === "slide" && <SlidePage />}
 
       </div>
     </div>
