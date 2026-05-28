@@ -5,7 +5,7 @@ import GamePage from "./pages/GamePage"
 import GAPage from './pages/GAPage'
 import SlidePage from "./pages/HIUSlidePage"
 function App() {
-  const [page, setPage] = useState("home")
+  const [page, setPage] = useState("slide")
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>

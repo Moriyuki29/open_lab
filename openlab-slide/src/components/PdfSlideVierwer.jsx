@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
-import pdfWorkerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+﻿import { useMemo } from "react";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
-pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
-
-export default function PdfSlideViewer() {
-  const [numPages, setNumPages] = useState(null);
-
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
+export default function PdfSlideViewer({ fileUrl = "/slides/sample.pdf" }) {
+  const documents = useMemo(
+    () => [
+      {
+        uri: fileUrl,
+      },
+    ],
+    [fileUrl]
+  );
 
   return (
     <div
@@ -19,22 +19,36 @@ export default function PdfSlideViewer() {
         overflow: "auto",
       }}
     >
-      <Document
-        file="/slides/test.pdf"
-        onLoadSuccess={onDocumentLoadSuccess}
-        loading="PDFを読み込み中..."
-        error="PDFの読み込みに失敗しました。"
-      >
-        {Array.from(new Array(numPages), (el, index) => (
-          <Page
-            key={`page_${index + 1}`}
-            pageNumber={index + 1}
-            width={800}
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-          />
-        ))}
-      </Document>
+      <DocViewer documents={documents} 
+        pluginRenderers={DocViewerRenderers}
+        config={{
+          header: {
+            disableHeader: true,
+            disableFileName: true,
+          },
+          pdfZoom: {
+            defaultZoom: 1.0,
+            zoomJump: 0.2,
+          },
+          
+  
+        
+        }}
+        style={{
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#9fffbf",
+        }}
+        theme={{
+      primary: "#0057b7",
+      secondary: "#ffffff",
+      tertiary: "#dbafff",
+      textPrimary: "#00ff88",
+      textSecondary: "#555",
+      textTertiary: "#777777",
+      disableThemeScrollbar: false,
+      }}
+      />
     </div>
   );
 }
