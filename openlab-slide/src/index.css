@@ -109,3 +109,9 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Hide PDF.js text layer overlay under the rendered canvas */
+#react-doc-viewer .textLayer,
+#react-doc-viewer .react-pdf__Page__textContent {
+  display: none !important;
+}
