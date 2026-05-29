@@ -9,7 +9,7 @@ const GAPage = () => {
     const [distance, setDistance] = useState(null);
     const [generation, setGeneration] = useState(0); // 世代数のステートを追加
     const [isSearching, setIsSearching] = useState(false);
-    
+    const [mode, setMode] = useState("ga"); // "ga" または "ls" を保持するステート
     // アニメーションループを制御・中断するためのRef
     const isSearchingRef = useRef(false);
     // 現在の個体群を保持するためのRef
@@ -20,7 +20,20 @@ const GAPage = () => {
         if (!isSearchingRef.current) return;
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/ga", {
+            let url="";
+            let requestBody={};
+            if (mode === "ga") {
+                url = "http://127.0.0.1:8000/api/ga";
+                requestBody = { population: populationRef.current };
+            } 
+            else if (mode === "ls") {
+                url = "http://127.0.0.1:8000/api/ls";
+                const currentBest = populationRef.current.length > 0 
+                 ? populationRef.current[0]
+                 : initialRoute;
+                requestBody = { population: currentBest };
+            }
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -93,6 +106,18 @@ const GAPage = () => {
                     style={{ padding: '8px 16px', fontSize: '16px', cursor: 'pointer' }}
                 >
                     リセット
+                </button>
+                <button
+                    onClick={() => setMode("ga")}
+                    style={{ padding: '8px 16px', fontSize: '16px', cursor: 'pointer' }}
+                >
+                    GAモード
+                </button>
+                <button
+                    onClick={() => setMode("ls")}
+                    style={{ padding: '8px 16px', fontSize: '16px', cursor: 'pointer' }}
+                >
+                    局所探索モード
                 </button>
             </div>
             
