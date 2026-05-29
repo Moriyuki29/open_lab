@@ -11,7 +11,7 @@ function CipherPage() {
     "る", "日", "と", "で", "し", "も"
   ]
   const [angle, setAngle] = useState(0)
-  const [showMask, setShowMask] = useState(true)
+  const [showMask, setShowMask] = useState(false)
   return (
 
     <div
@@ -24,7 +24,7 @@ function CipherPage() {
 
         height: "100vh",
 
-        backgroundColor: "#f3f3f3"
+        backgroundColor: "#b1e5ff"
       }}
     >
       <div 
@@ -84,7 +84,8 @@ function CipherPage() {
             gridTemplateColumns: `repeat(${gridSize}, 80px)`,
             gridTemplateRows: `repeat(${gridSize}, 80px)`,
 
-            gap: "5px"
+            gap: "5px",
+            backgroundColor: "#000000",
           }}
         >
 
