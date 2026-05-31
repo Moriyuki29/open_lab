@@ -107,6 +107,7 @@ const GAPage = () => {
                 >
                     リセット
                 </button>
+                <h1>{mode}</h1>
                 <button
                     onClick={() => setMode("ga")}
                     style={{ padding: '8px 16px', fontSize: '16px', cursor: 'pointer' }}

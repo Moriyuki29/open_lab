@@ -4,6 +4,7 @@ import CipherPage from "./pages/CipherPage"
 import GamePage from "./pages/GamePage"
 import GAPage from './pages/GAPage'
 import SlidePage from "./pages/HIUSlidePage"
+import Petri from "./pages/Petri"
 function App() {
   const [page, setPage] = useState("slide")
 
@@ -36,6 +37,10 @@ function App() {
         <button onClick={() => setPage("ga")}>
           巡回セールスマン問題
         </button>
+
+        <button onClick={() => setPage("petri")}>
+          ペトリネット
+        </button>
       </div>
 
       {/* 右 */}
@@ -46,6 +51,7 @@ function App() {
         {page === "game" && <GamePage />}
         {page === "ga" && <GAPage />}
         {page === "slide" && <SlidePage />}
+        {page === "petri" && <Petri></Petri>}
 
       </div>
     </div>

@@ -1,0 +1,197 @@
+/* ベースレイアウト */
+.simulation-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 1rem;
+  font-family: sans-serif;
+  color: #1f2937;
+  box-sizing: border-box;
+}
+
+/* ヘッダーとコントロール */
+.header {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* N入力フォーム用 */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.n-input {
+  width: 4rem;
+  padding: 0.4rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+.controls select {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-play { background-color: #3b82f6; }
+.btn-play:hover { background-color: #2563eb; }
+.btn-pause { background-color: #ef4444; }
+.btn-pause:hover { background-color: #dc2626; }
+.btn-reset { background-color: #6b7280; }
+.btn-reset:hover { background-color: #4b5563; }
+.btn-danger { background-color: #9333ea; }
+.btn-danger:hover { background-color: #7e22ce; }
+
+/* メインコンテンツエリア */
+.main-content {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+/* 円卓描画エリア */
+.table-area {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+}
+
+.deadlock-warning {
+  position: absolute;
+  z-index: 20;
+  background-color: #fee2e2;
+  border: 4px solid #ef4444;
+  color: #b91c1c;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  font-size: 1.875rem;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+}
+
+.table-circle {
+  width: 16rem;
+  height: 16rem;
+  border-radius: 50%;
+  background-color: #ffedd5;
+  border: 4px solid #fdba74;
+  position: absolute;
+}
+
+/* 哲学者ノード */
+.philosopher {
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  margin-left: -2.5rem;
+  margin-top: -2.5rem;
+  border-radius: 50%;
+  border: 4px solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.phil-name { font-weight: bold; font-size: 0.8rem; }
+.phil-state { font-size: 0.7rem; }
+
+.phil-thinking {
+  background-color: #eff6ff;
+  border-color: #60a5fa;
+}
+
+.phil-hungry {
+  background-color: #fefce8;
+  border-color: #eab308;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+.phil-eating {
+  background-color: #dcfce7;
+  border-color: #22c55e;
+  transform: scale(1.1);
+}
+
+/* フォークノード */
+.fork {
+  position: absolute;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-left: -0.9rem;
+  margin-top: -0.9rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 0.7rem;
+  transition: all 0.5s ease;
+  z-index: 10;
+}
+
+.fork-idle {
+  background-color: #d1d5db;
+  color: #374151;
+}
+
+.fork-active {
+  background-color: #1f2937;
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
