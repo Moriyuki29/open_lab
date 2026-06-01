@@ -20,27 +20,26 @@ const GAPage = () => {
         if (!isSearchingRef.current) return;
 
         try {
-            let url="";
-            let requestBody={};
+            const url = "http://127.0.0.1:8000/api/tsp";
+            let requestBody = {};
             if (mode === "ga") {
-                url = "http://127.0.0.1:8000/api/ga";
-                requestBody = { population: populationRef.current };
+                requestBody = { population: populationRef.current, mode: "ga" };
             } 
             else if (mode === "ls") {
-                url = "http://127.0.0.1:8000/api/ls";
                 const currentBest = populationRef.current.length > 0 
-                 ? populationRef.current[0]
-                 : initialRoute;
-                requestBody = { population: currentBest };
+                    ? populationRef.current[0]
+                    : (root.length > 0 ? root : initialRoute);
+                requestBody = { 
+                    population: [currentBest], 
+                    mode: "ls" // バックエンドに伝えるモード情報
+                };
             }
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ 
-                    population: populationRef.current 
-                }),
+                body: JSON.stringify(requestBody), // 変更：requestBody を指定
             });
 
             if (!response.ok) {

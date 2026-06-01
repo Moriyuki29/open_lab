@@ -32,10 +32,29 @@ eil51_nodes = [
 ]
 node_dict = {node["id"]: node for node in eil51_nodes}
 
-class GARequest(BaseModel):
+class TSPRequest(BaseModel):
     population: List[List[int]]
     population_size: int = 50
     mutation_rate: float = 0.1
+    mode: str = "ga" # "ga" or "ls"
+
+def local_search(route: List[int]) -> List[int]:
+    best_route = route[:]
+    best_distance = calc_distance(best_route)
+    n = len(route)
+    
+    # 全ての組み合わせで「反転」を試す（本来の2-opt）
+    for i in range(n):
+        for j in range(i + 1, n):
+            new_route = best_route[:]
+            # iからjまでの区間を丸ごとひっくり返す
+            new_route[i:j+1] = reversed(new_route[i:j+1]) 
+            
+            new_distance = calc_distance(new_route)
+            if new_distance < best_distance:
+                return new_route # 1箇所でも良くなったら即座にフロントへ返して描画させる
+                
+    return best_route # どこを反転させても良くならなければそのまま返す（局所最適解に到達）
 
 def calc_distance(route: List[int]) -> float:
     dist = 0.0
@@ -91,38 +110,74 @@ def mutate(route: List[int], rate: float) -> List[int]:
         route[idx1:idx2+1] = reversed(route[idx1:idx2+1])
     return route
 
-@app.post("/api/ga")
-def run_ga_generation(req: GARequest):
-    pop = req.population
-    # 初回リクエスト時（個体群が空の場合）は初期生成する
-    if not pop:
-        pop = generate_initial_population(req.population_size)
+@app.post("/api/tsp")
+def run_ga_generation(req: TSPRequest):
+    if req.mode == "ga":
+        pop = req.population
+        # 初回リクエスト時（個体群が空の場合）は初期生成する
+        if not pop:
+            pop = generate_initial_population(req.population_size)
+        
+        elif len(pop) < req.population_size:
+            # 現在いる貴重なエリート（lsで磨かれた1個など）をベースとしてキープ
+            base_routes = pop.copy()
+            new_pop = []
+            
+            # まずは元々あった個体をそのまま次世代に入れる
+            new_pop.extend(base_routes)
+            
+            # 50個に満たせるまで、ベースのルートを少しずつ「突然変異（シャッフル）」させてクローンを量産する
+            while len(new_pop) < req.population_size:
+                # 届いた個体の中からランダムに1つ選んでベースにする
+                parent = random.choice(base_routes)
+                # そのままだと全員同じクローンになってしまうので、
+                # 突然変異（mutate）を使って、少しだけルートが変わったバリエーション豊かな個体を作る
+                # 確率（rate）は高めの 0.5〜0.8 くらいにすると、多様な集団ができてGAが再活性化します
+                child = mutate(parent.copy(), rate=0.6) 
+                new_pop.append(child)
+            
+            # 増殖させた50個の集団を、今回の計算対象（pop）にすり替える
+            pop = new_pop
+        # 適応度（距離の短さ）の評価
+        scored_pop = [(route, calc_distance(route)) for route in pop]
+        scored_pop.sort(key=lambda x: x[1]) # 距離が短い順にソート
+        
+        best_route = scored_pop[0][0]
+        best_distance = scored_pop[0][1]
 
-    # 適応度（距離の短さ）の評価
-    scored_pop = [(route, calc_distance(route)) for route in pop]
-    scored_pop.sort(key=lambda x: x[1]) # 距離が短い順にソート
-    
-    best_route = scored_pop[0][0]
-    best_distance = scored_pop[0][1]
+        new_pop = []
+        # エリート保存（上位2個体をそのまま残す）
+        new_pop.extend([scored_pop[0][0], scored_pop[1][0]])
 
-    new_pop = []
-    # エリート保存（上位2個体をそのまま残す）
-    new_pop.extend([scored_pop[0][0], scored_pop[1][0]])
+        # 選択・交叉・突然変異による次世代生成
+        while len(new_pop) < req.population_size:
+            # トーナメント選択 (サイズ3)
+            tour1 = random.sample(scored_pop, 3)
+            tour2 = random.sample(scored_pop, 3)
+            p1 = min(tour1, key=lambda x: x[1])[0]
+            p2 = min(tour2, key=lambda x: x[1])[0]
 
-    # 選択・交叉・突然変異による次世代生成
-    while len(new_pop) < req.population_size:
-        # トーナメント選択 (サイズ3)
-        tour1 = random.sample(scored_pop, 3)
-        tour2 = random.sample(scored_pop, 3)
-        p1 = min(tour1, key=lambda x: x[1])[0]
-        p2 = min(tour2, key=lambda x: x[1])[0]
+            child = crossover(p1, p2) #交叉を記述
+            child = mutate(child, req.mutation_rate) #突然変異を記述
+            new_pop.append(child)
 
-        child = crossover(p1, p2) #交叉を記述
-        child = mutate(child, req.mutation_rate) #突然変異を記述
-        new_pop.append(child)
-
-    return {
-        "best_route": best_route,
-        "best_distance": best_distance,
-        "new_population": new_pop
-    }
+        return {
+            "best_route": best_route,
+            "best_distance": best_distance,
+            "new_population": new_pop
+        }
+    elif req.mode == "ls":
+        current_route = req.population[0] if req.population else []
+        
+        if not current_route:
+            # 万が一空データが来た場合は初期ルートを作って対応
+            current_route = list(range(1, 52))
+            
+        # ★ 定義されている局所探索アルゴリズムを実行！
+        best_route = local_search(current_route)
+        best_distance = calc_distance(best_route)
+        return {
+            "best_route": best_route,
+            "best_distance": best_distance,
+            "new_population": [best_route]
+        }
