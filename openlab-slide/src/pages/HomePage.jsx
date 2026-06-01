@@ -62,7 +62,8 @@ function HomePage() {
                 setPage(page + 1)
             }
           }}
-          style={{              
+          style={{ 
+            marginTop: "auto" ,            
             padding: "12px 24px",
             backgroundColor: "#00ff88",
             color: "#111",

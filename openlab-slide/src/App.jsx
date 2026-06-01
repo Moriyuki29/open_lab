@@ -5,6 +5,7 @@ import GamePage from "./pages/GamePage"
 import GAPage from './pages/GAPage'
 import SlidePage from "./pages/HIUSlidePage"
 import Petri from "./pages/Petri"
+import SecretMahjongPage from "./pages/SecretMahjongPage"
 function App() {
   const [page, setPage] = useState("slide")
 
@@ -41,6 +42,28 @@ function App() {
         <button onClick={() => setPage("petri")}>
           ペトリネット
         </button>
+        <button
+          onClick={() => setPage("secret")}
+          style={{
+            //position: "absolute",
+            marginTop: "360px",
+            bottom: "10px",
+            left: "10px",
+            width: "230px",
+            height: "40px",
+            background: "#222",       // サイドバーと同じ色で同化
+            border: "none",           // 枠線を消す
+            outline: "none",
+            color: "#222",            // 文字色も同じ色にして見えなくする
+            cursor: "pointer",        // マウスが乗っても指マークにしない
+            transition: "background 0.3s" // 隠し要素だとわからせるための微調整用
+          }}
+          // オプション：ダブルクリックじゃないと開かないようにするとさらに難易度が上がって面白いです
+          // onDoubleClick={() => setPage("secret")}
+        >
+          {/* ここにこっそり秘密のメッセージを入れておいても、色同化で見えません */}
+          secret area
+        </button>
       </div>
 
       {/* 右 */}
@@ -52,7 +75,7 @@ function App() {
         {page === "ga" && <GAPage />}
         {page === "slide" && <SlidePage />}
         {page === "petri" && <Petri></Petri>}
-
+        {page === "secret" && <SecretMahjongPage />}
       </div>
     </div>
   )

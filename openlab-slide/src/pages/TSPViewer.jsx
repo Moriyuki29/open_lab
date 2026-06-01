@@ -43,7 +43,7 @@ const TSPViewer = ({ root = [] }) => {
       >
         {/* 1. 経路の描画（点の下に配置するため先に描画） */}
         {root.length > 0 && (
-          <polyline
+          <polygon
             points={polylinePoints}
             fill="none"
             stroke="#3b82f6" // 経路は見やすい青色
