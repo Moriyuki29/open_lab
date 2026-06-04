@@ -35,7 +35,7 @@ node_dict = {node["id"]: node for node in eil51_nodes}
 class TSPRequest(BaseModel):
     population: List[List[int]]
     population_size: int = 50
-    mutation_rate: float = 0.1
+    mutation_rate: float = 0.01
     mode: str = "ga" # "ga" or "ls"
 
 def local_search(route: List[int]) -> List[int]:
@@ -105,10 +105,14 @@ def crossover(p1: List[int], p2: List[int]) -> List[int]:
 
 # <=====================================ここに突然変異を書き足す．
 def mutate(route: List[int], rate: float) -> List[int]:
-    if random.random() < rate:
-        idx1, idx2 = sorted(random.sample(range(len(route)), 2))
-        route[idx1:idx2+1] = reversed(route[idx1:idx2+1])
-    return route
+    new_route = route[:]
+    for i in range(len(route)):
+        if random.random() < rate:
+            j=random.randint(0, len(route) - 1)
+            # 2点を選んで、その間の区間を丸ごとひっくり返す
+            idx1,idx2=sorted([i,j])
+            new_route[idx1:idx2+1] = reversed(new_route[idx1:idx2+1])
+    return new_route
 
 @app.post("/api/tsp")
 def run_ga_generation(req: TSPRequest):
@@ -171,9 +175,11 @@ def run_ga_generation(req: TSPRequest):
         
         if not current_route:
             # 万が一空データが来た場合は初期ルートを作って対応
-            current_route = list(range(1, 52))
-            
-        # ★ 定義されている局所探索アルゴリズムを実行！
+            current_route = random.sample(range(1, 52), 51)
+        elif current_route == list(range(1, 52)):
+            # 初期状態のままの場合シャッフル
+            random.shuffle(current_route)
+        #定義済みの局所探索アルゴリズムを呼び出し実行
         best_route = local_search(current_route)
         best_distance = calc_distance(best_route)
         return {
