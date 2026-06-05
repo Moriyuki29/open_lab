@@ -79,7 +79,7 @@ function App() {
           fontWeight: page === "petri" ? "bold" : "normal",
           color: page === "petri" ? "#ffffff" : "#dbd8d8",
         }}>
-          円卓の哲学者問題
+          食事する哲学者問題
         </button>
         <button
           onClick={() => setPage("secret")}

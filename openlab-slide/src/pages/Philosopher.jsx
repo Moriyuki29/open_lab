@@ -172,7 +172,7 @@ export default function PhilosopherSimulation() {
   return (
     <div className="simulation-container">
       <header className="header">
-        <h1>円卓の哲学者問題 シミュレータ</h1>
+        <h1>食事する哲学者問題 シミュレータ</h1>
         <div className="controls">
           {/* N入力用のUIを追加 */}
           <label className="input-group">

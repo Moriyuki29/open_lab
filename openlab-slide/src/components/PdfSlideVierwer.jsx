@@ -1,7 +1,7 @@
 ﻿import { useMemo } from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
-export default function PdfSlideViewer({ fileUrl = "/slides/sample.pdf" }) {
+export default function PdfSlideViewer({ fileUrl = "/slides/university_slide.pdf" }) {
   const documents = useMemo(
     () => [
       {

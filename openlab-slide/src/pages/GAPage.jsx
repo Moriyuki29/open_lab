@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import TSPViewer from "./TSPViewer";
-
 const GAPage = () => {
     // eil51のデフォルトの順番を初期表示用に使用
     const initialRoute = Array.from({ length: 51 }, (_, i) => i + 1);
@@ -10,6 +9,7 @@ const GAPage = () => {
     const [generation, setGeneration] = useState(0); // 世代数のステートを追加
     const [isSearching, setIsSearching] = useState(false);
     const [mode, setMode] = useState("ga"); // "ga" または "ls" を保持するステート
+    const[page, setPage] = useState("main");
     // アニメーションループを制御・中断するためのRef
     const isSearchingRef = useRef(false);
     // 現在の個体群を保持するためのRef
@@ -88,7 +88,44 @@ const GAPage = () => {
         setDistance(null);
         setGeneration(0); // リセット時に世代数も0に戻す
     };
+    if (page === "video") {
+        return (
+            <div style={{ textAlign: "center", padding: "40px 20px" }}>
+                <h2>解説ビデオ</h2>
+                <p>ここにTSP（巡回セールスマン問題）に関するビデオを表示します。</p>
+                
+                {/* ビデオの配置エリア */}
+                <div style={{ margin: "30px auto", maxWidth: "800px" }}>
+                    {/* publicフォルダなどに配置した動画パス、またはYouTubeの埋め込み等に差し替えてください */}
+                    <video 
+                        controls 
+                        style={{ width: "100%", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
+                    >
+                        <source src="../public/LStoGA.mp4" type="video/mp4" />
+                        お使いのブラウザは動画タグをサポートしていません。
+                    </video>
+                </div>
 
+                {/* 元のページに戻るボタン */}
+                <div style={{ marginTop: "30px" }}>
+                    <button 
+                        onClick={() => setPage("main")} // メイン画面に戻す
+                        style={{ 
+                            padding: '10px 20px', 
+                            fontSize: '16px', 
+                            cursor: 'pointer',
+                            backgroundColor: '#6c757d',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px'
+                        }}
+                    >
+                        元のページに戻る
+                    </button>
+                </div>
+            </div>
+        );
+    }
     return (
         <div style={{ textAlign: 'center' }}>
             <TSPViewer root={root} />
@@ -112,6 +149,7 @@ const GAPage = () => {
                         if (isSearching) {
                             isSearchingRef.current = false;
                             setIsSearching(false);
+                            setMode("ga");
                         }
                         setMode("ga");
                     }}
@@ -142,6 +180,29 @@ const GAPage = () => {
                     <p style={{ margin: '5px 0' }}>最短距離: {distance.toFixed(2)}</p>
                 </div>
             )}
+            <hr style={{ margin: '40px 0', border: '0', borderTop: '1px solid #ccc' }} />
+            <div style={{ marginTop: '20px' }}>
+                <button 
+                    onClick={() => {
+                        // ビデオページに行く際、もし探索中なら安全に停止させる
+                        isSearchingRef.current = false;
+                        setIsSearching(false);
+                        // ビデオページに切り替え
+                        setPage("video");
+                    }}
+                    style={{ 
+                        padding: '12px 24px', 
+                        fontSize: '16px', 
+                        cursor: 'pointer', 
+                        backgroundColor: '#007bff', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '4px' 
+                    }}
+                >
+                    ビデオを見るページへ移動
+                </button>
+            </div>
         </div>
     );
 };
