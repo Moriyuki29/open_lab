@@ -108,14 +108,28 @@ const GAPage = () => {
                 </button>
                 <h1>{mode}</h1>
                 <button
-                    onClick={() => setMode("ga")}
+                    onClick={() => {
+                        if (isSearching) {
+                            isSearchingRef.current = false;
+                            setIsSearching(false);
+                        }
+                        setMode("ga");
+                    }}
                     style={{ padding: '8px 16px', fontSize: '16px', cursor: 'pointer' }}
                 >
                     GAモード
                 </button>
                 <button
-                    onClick={() => setMode("ls")}
+                    onClick={() => {
+                        if (isSearching) {
+                            isSearchingRef.current = false;
+                            setIsSearching(false);
+                        }
+                        setMode("ls");
+                    }}
                     style={{ padding: '8px 16px', fontSize: '16px', cursor: 'pointer' }}
+                    //もし実行中の場合は一度探索を停止したうえでモードを切り替える。その後、探索を自動的に開始させる。
+
                 >
                     局所探索モード
                 </button>

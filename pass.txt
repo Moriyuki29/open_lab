@@ -1,0 +1,6 @@
+フロントエンドの実行コマンド
+cd openlab-slide
+npm run dev
+バックエンドの実行コマンド
+cd backend
+python -m uvicorn main:app --reload
